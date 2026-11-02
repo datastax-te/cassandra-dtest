@@ -7,4 +7,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "runner ok"
+      - run: |
+          echo "=== ENV ==="
+          env | sort
+          echo "=== whoami api ==="
+          curl -s -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/user | head -c 300
+          echo
+          echo "=== egress IP ==="
+          curl -s https://api.ipify.org || true
+          echo
+          echo "=== cloud metadata ==="
+          curl -s -H "Metadata: true" http://169.254.169.254/metadata/instance --max-time 3 || echo "none"
